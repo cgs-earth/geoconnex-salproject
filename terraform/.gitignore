@@ -1,0 +1,8 @@
+# Terraform's working files and state. State holds resource IDs and the
+# service URL, nothing secret, but it belongs in a remote backend rather than
+# in git once more than one person applies this.
+.terraform/
+*.tfstate
+*.tfstate.*
+crash.log
+crash.*.log

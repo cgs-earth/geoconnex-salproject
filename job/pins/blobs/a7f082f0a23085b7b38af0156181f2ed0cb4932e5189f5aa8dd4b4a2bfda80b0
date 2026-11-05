@@ -1,0 +1,433 @@
+@prefix catalog: <https://www.opengis.net/def/catalog/> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix gsp: <http://www.opengis.net/ont/geosparql#> .
+@prefix ns1127: <https://defs.opengis.net/org/> .
+@prefix ns1130: <mailto:john.herring@> .
+@prefix ns1131: <mailto:joseph.abhayaratna@> .
+@prefix ns1135: <http://www.opengis.net/ont/geosparql/> .
+@prefix ns349: <http://www.opengis.net/ont/> .
+@prefix ogc-cat: <urn:ogc:defs/catalogs/> .
+@prefix orc: <https://orcid.org/> .
+@prefix orcidorg: <ttps://orcid.org/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix prez: <https://prez.dev/> .
+@prefix profile: <https://prez.dev/profile/> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix sdo: <https://schema.org/> .
+@prefix vann: <http://purl.org/vocab/vann/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+dcterms:replaces prez:description "A related resource that is supplanted, displaced, or superseded by the described resource."@en,
+        "This property is intended to be used with non-literal values. This property is an inverse property of Is Replaced By."@en ;
+    prez:label "replaces",
+        "Replaces"@en .
+
+vann:preferredNamespacePrefix prez:description "The preferred namespace prefix to use when using terms from this vocabulary in an XML document."@en ;
+    prez:label "Preferred Namespace Prefix"@en .
+
+vann:preferredNamespaceUri prez:description "The preferred namespace URI to use when using terms from this vocabulary in an XML document."@en ;
+    prez:label "Preferred Namespace Uri"@en .
+
+ns349:geosparql a owl:Ontology ;
+    dcterms:replaces ns1135:1.0 ;
+    vann:preferredNamespacePrefix "geo" ;
+    vann:preferredNamespaceUri "http://www.opengis.net/ont/geosparql#"^^xsd:anyURI ;
+    rdfs:member gsp:Feature,
+        gsp:FeatureCollection,
+        gsp:Geometry,
+        gsp:GeometryCollection,
+        gsp:SpatialObject,
+        gsp:SpatialObjectCollection,
+        gsp:asDGGS,
+        gsp:asGML,
+        gsp:asGeoJSON,
+        gsp:asKML,
+        gsp:asWKT,
+        gsp:coordinateDimension,
+        gsp:defaultGeometry,
+        gsp:dggsLiteral,
+        gsp:dimension,
+        gsp:ehContains,
+        gsp:ehCoveredBy,
+        gsp:ehCovers,
+        gsp:ehDisjoint,
+        gsp:ehEquals,
+        gsp:ehInside,
+        gsp:ehMeet,
+        gsp:ehOverlap,
+        gsp:geoJSONLiteral,
+        gsp:gmlLiteral,
+        gsp:hasArea,
+        gsp:hasBoundingBox,
+        gsp:hasCentroid,
+        gsp:hasDefaultGeometry,
+        gsp:hasGeometry,
+        gsp:hasLength,
+        gsp:hasMetricArea,
+        gsp:hasMetricLength,
+        gsp:hasMetricPerimeterLength,
+        gsp:hasMetricSize,
+        gsp:hasMetricSpatialAccuracy,
+        gsp:hasMetricSpatialResolution,
+        gsp:hasMetricVolume,
+        gsp:hasPerimeterLength,
+        gsp:hasSerialization,
+        gsp:hasSize,
+        gsp:hasSpatialAccuracy,
+        gsp:hasSpatialResolution,
+        gsp:hasVolume,
+        gsp:isEmpty,
+        gsp:isSimple,
+        gsp:kmlLiteral,
+        gsp:rcc8dc,
+        gsp:rcc8ec,
+        gsp:rcc8eq,
+        gsp:rcc8ntpp,
+        gsp:rcc8ntppi,
+        gsp:rcc8po,
+        gsp:rcc8tpp,
+        gsp:rcc8tppi,
+        gsp:sfContains,
+        gsp:sfCrosses,
+        gsp:sfDisjoint,
+        gsp:sfEquals,
+        gsp:sfIntersects,
+        gsp:sfOverlaps,
+        gsp:sfTouches,
+        gsp:sfWithin,
+        gsp:spatialDimension,
+        gsp:wktLiteral ;
+    owl:versionIRI gsp:1.1 ;
+    owl:versionInfo """1.1.1 - 2026-02 - minor metadata changes to ensure Rainbow display
+
+1.1 - version as originally published with GeoSPARQL 1.1
+""" ;
+    prez:description "An RDF/OWL vocabulary for representing spatial information"@en ;
+    prez:identifier "ns349:geosparql" ;
+    prez:label "GeoSPARQL Ontology" ;
+    prez:link "/catalogs/ogc-cat:datamodels/col/catalog:geosparql/it1/ns349:geosparql" ;
+    prez:members "/catalogs/ogc-cat:datamodels/col/catalog:geosparql/it1/ns349:geosparql/it2" ;
+    prez:type prez:FocusNode ;
+    sdo:citation "http://www.opengis.net/doc/IS/geosparql/1.1"^^xsd:anyURI ;
+    sdo:contributor orc:0000-0002-3313-924X,
+        orc:0000-0002-8742-7730,
+        orc:0000-0002-9499-5840,
+        orc:0000-0003-1988-462X,
+        orc:0000-0003-3789-2260,
+        ns1130:oracle.com,
+        ns1131:geoscape.com.au,
+        orcidorg:0000-0002-3884-3420 ;
+    sdo:copyrightNotice "(c) 2021 Open Geospatial Consortium" ;
+    sdo:creator ns1127:geosparql-swg ;
+    sdo:dateCreated "2020-09-09"^^xsd:date ;
+    sdo:dateIssued "2025-11-19"^^xsd:date ;
+    sdo:dateModified "2021-10-27"^^xsd:date ;
+    sdo:description "An RDF/OWL vocabulary for representing spatial information"@en ;
+    sdo:license "https://www.ogc.org/license"^^xsd:anyURI ;
+    sdo:name "GeoSPARQL Ontology" ;
+    sdo:publisher ns1127:ogc .
+
+rdf:type prez:description "The subject is an instance of a class." ;
+    prez:label "type" .
+
+rdfs:member prez:description "A member of the subject resource." ;
+    prez:label "member" .
+
+xsd:anyURI prez:label "any URI",
+        "anyURI" .
+
+xsd:date prez:label "date" .
+
+owl:versionIRI prez:description "The property that identifies the version IRI of an ontology." ;
+    prez:label "versionIRI" .
+
+owl:versionInfo prez:description "The annotation property that provides version information for an ontology or another OWL construct." ;
+    prez:label "versionInfo" .
+
+prez:link prez:label "link" .
+
+prez:members prez:label "members" .
+
+sdo:citation prez:description "A citation or reference to another creative work, such as another publication, web page, scholarly article, etc",
+        "A citation or reference to another creative work, such as another publication, web page, scholarly article, etc." ;
+    prez:label "citation" .
+
+sdo:contributor prez:description "A secondary contributor to the CreativeWork or Event",
+        "A secondary contributor to the CreativeWork or Event." ;
+    prez:label "contributor" .
+
+sdo:copyrightNotice prez:description "Text of a notice appropriate for describing the copyright aspects of this Creative Work, ideally indicating the owner of the copyright for the Work",
+        "Text of a notice appropriate for describing the copyright aspects of this Creative Work, ideally indicating the owner of the copyright for the Work." ;
+    prez:label "copyright notice" .
+
+sdo:creator prez:description "The creator/author of this CreativeWork. This is the same as the Author property for CreativeWork",
+        "The creator/author of this CreativeWork. This is the same as the Author property for CreativeWork." ;
+    prez:label "creator" .
+
+sdo:dateCreated prez:description "The date on which the CreativeWork was created or the item was added to a DataFeed",
+        "The date on which the CreativeWork was created or the item was added to a DataFeed." ;
+    prez:label "date created" .
+
+sdo:dateIssued prez:description "The date the ticket was issued",
+        "The date the ticket was issued." ;
+    prez:label "date issued" .
+
+sdo:dateModified prez:description "The date on which the CreativeWork was most recently modified or when the item's entry was modified within a DataFeed",
+        "The date on which the CreativeWork was most recently modified or when the item's entry was modified within a DataFeed." ;
+    prez:label "date modified" .
+
+sdo:description prez:description "A description of the item",
+        "A description of the item." ;
+    prez:label "description" .
+
+sdo:license prez:description "A license document that applies to this content, typically indicated by URL",
+        "A license document that applies to this content, typically indicated by URL." ;
+    prez:label "license" .
+
+sdo:name prez:description "The name of the item",
+        "The name of the item." ;
+    prez:label "name" .
+
+sdo:publisher prez:description "The publisher of the creative work",
+        "The publisher of the creative work." ;
+    prez:label "publisher" .
+
+catalog:geosparql prez:description "The Open Geospatial Consortium's Geosemantics DWG's Semantic Web resources" ;
+    prez:identifier "catalog:geosparql" ;
+    prez:label "Geosemantics DWG Catalogue" .
+
+ogc-cat:datamodels prez:identifier "ogc-cat:datamodels" ;
+    prez:label "OGC Data models" .
+
+gsp:1.1 prez:label "1.1" .
+
+gsp:Feature prez:description "A discrete spatial phenomenon in a universe of discourse."@en ;
+    prez:label "Feature"@en .
+
+gsp:FeatureCollection prez:description "A collection of individual Features."@en,
+        "The class Feature Collection represents any collection of individual Features."@en ;
+    prez:label "Feature Collection"@en .
+
+gsp:Geometry prez:description "A coherent set of direct positions in Euclidian space. A direct position holds the coordinates for a position within a Coordinate Reference System (CRS)."@en,
+        "A coherent set of direct positions in space. The positions are held within a Spatial Reference System (SRS)."@en ;
+    prez:label "Geometry"@en .
+
+gsp:GeometryCollection prez:description "A collection of individual Geometries."@en,
+        "The class Geometry Collection represents any collection of individual Geometries."@en ;
+    prez:label "Geometry Collection"@en .
+
+gsp:SpatialObject prez:description "Anything spatial (being or having a shape, position or an extent)."@en,
+        "Anything spatial (having or being a shape, position or an extent)."@en ;
+    prez:label "Spatial Object"@en .
+
+gsp:SpatialObjectCollection prez:description "A collection of individual Spatial Objects."@en,
+        "The class Spatial Object Collection represents any collection of individual Spatial Objects. It is superclass of Feature Collection and Geometry Collection."@en ;
+    prez:label "Spatial Object Collection"@en .
+
+gsp:asDGGS prez:description "The Discrete Global Grid System (DGGS) serialization of a Geometry"@en ;
+    prez:label "as DGGS"@en .
+
+gsp:asGML prez:description "The GML serialization of a Geometry"@en ;
+    prez:label "as GML"@en .
+
+gsp:asGeoJSON prez:description "The GeoJSON serialization of a Geometry"@en ;
+    prez:label "as GeoJSON"@en .
+
+gsp:asKML prez:description "The KML serialization of a Geometry"@en ;
+    prez:label "as KML"@en .
+
+gsp:asWKT prez:description "The WKT serialization of a Geometry"@en ;
+    prez:label "as WKT"@en .
+
+gsp:coordinateDimension prez:description "The number of measurements or axes needed to describe the position of this Geometry in a coordinate system."@en ;
+    prez:label "coordinate dimension"@en .
+
+gsp:defaultGeometry prez:description "The default Geometry to be used in spatial calculations. It is usually the most detailed Geometry."@en ;
+    prez:label "default geometry"@en .
+
+gsp:dggsLiteral prez:description "A textual serialization of a Discrete Global Grid (DGGS) Geometry object."@en ;
+    prez:label "DGGS Literal"@en .
+
+gsp:dimension prez:description "The topological dimension of this geometric object, which must be less than or equal to the coordinate dimension. In non-homogeneous collections, this will return the largest topological dimension of the contained objects."@en ;
+    prez:label "dimension"@en .
+
+gsp:ehContains prez:description "States that the subject SpatialObject spatially contains the object SpatialObject. DE-9IM: T*TFF*FF*"@en ;
+    prez:label "contains"@en .
+
+gsp:ehCoveredBy prez:description "States that the subject SpatialObject is spatially covered by the object SpatialObject. DE-9IM: TFF*TFT**"@en ;
+    prez:label "covered by"@en .
+
+gsp:ehCovers prez:description "States that the subject SpatialObject spatially covers the object SpatialObject. DE-9IM: T*TFT*FF*"@en ;
+    prez:label "covers"@en .
+
+gsp:ehDisjoint prez:description "States that the subject SpatialObject is spatially disjoint from the object SpatialObject. DE-9IM: FF*FF****"@en ;
+    prez:label "disjoint"@en .
+
+gsp:ehEquals prez:description "States that the subject SpatialObject spatially equals the object SpatialObject. DE-9IM: TFFFTFFFT"@en ;
+    prez:label "equals"@en .
+
+gsp:ehInside prez:description "States that the subject SpatialObject is spatially inside the object SpatialObject. DE-9IM: TFF*FFT**"@en ;
+    prez:label "inside"@en .
+
+gsp:ehMeet prez:description "States that the subject SpatialObject spatially meets the object SpatialObject. DE-9IM: FT******* ^ F**T***** ^ F***T****"@en ;
+    prez:label "meet"@en .
+
+gsp:ehOverlap prez:description "States that the subject SpatialObject spatially overlaps the object SpatialObject. DE-9IM: T*T***T**"@en ;
+    prez:label "overlap"@en .
+
+gsp:geoJSONLiteral prez:description "A GeoJSON serialization of a Geometry object."@en ;
+    prez:label "GeoJSON Literal"@en .
+
+gsp:gmlLiteral prez:description "A GML serialization of a Geometry object."@en ;
+    prez:label "GML Literal"@en .
+
+gsp:hasArea prez:description "The area of a Spatial Object."@en ;
+    prez:label "has area"@en .
+
+gsp:hasBoundingBox prez:description "The minimum or smallest bounding or enclosing box of a given Feature."@en ;
+    prez:label "has bounding box"@en .
+
+gsp:hasCentroid prez:description "The arithmetic mean position of all the Geometry points of a given Feature."@en ;
+    prez:label "has centroid"@en .
+
+gsp:hasDefaultGeometry prez:description "The default Geometry to be used in spatial calculations. It is usually the most detailed Geometry."@en ;
+    prez:label "has default geometry"@en .
+
+gsp:hasGeometry prez:description "A spatial representation for a given Feature."@en ;
+    prez:label "has geometry"@en .
+
+gsp:hasLength prez:description "The length of a Spatial Object."@en ;
+    prez:label "has length"@en .
+
+gsp:hasMetricArea prez:description "The area of a Spatial Object in square meters."@en ;
+    prez:label "has area in square meters"@en .
+
+gsp:hasMetricLength prez:description "The length of a Spatial Object in meters."@en ;
+    prez:label "has length in meters"@en .
+
+gsp:hasMetricPerimeterLength prez:description "The length of the perimeter of a Spatial Object in meters."@en ;
+    prez:label "has perimeter length in meters"@en .
+
+gsp:hasMetricSize prez:description "Subproperties of this property are used to indicate the size of a Spatial Object, as a measurement or estimate of one or more dimensions of the Spatial Object's spatial presence. Units are always metric (meter, square meter or cubic meter)."@en ;
+    prez:label "has metric size"@en .
+
+gsp:hasMetricSpatialAccuracy prez:description "The positional accuracy of the coordinates of a Geometry in meters."@en ;
+    prez:label "has spatial accuracy in meters"@en .
+
+gsp:hasMetricSpatialResolution prez:description "The spatial resolution of a Geometry in meters."@en ;
+    prez:label "has spatial resolution in meters"@en .
+
+gsp:hasMetricVolume prez:description "The volume of a Spatial Object in cubic meters."@en ;
+    prez:label "has volume in cubic meters"@en .
+
+gsp:hasPerimeterLength prez:description "The length of the perimeter of a Spatial Object."@en ;
+    prez:label "has perimeter length"@en .
+
+gsp:hasSerialization prez:description "Connects a Geometry object with its text-based serialization."@en ;
+    prez:label "has serialization"@en .
+
+gsp:hasSize prez:description "Subproperties of this property are used to indicate the size of a Spatial Object as a measurement or estimate of one or more dimensions of the Spatial Object's spatial presence."@en ;
+    prez:label "has size"@en .
+
+gsp:hasSpatialAccuracy prez:description "The positional accuracy of the coordinates of a Geometry."@en ;
+    prez:label "has spatial accuracy"@en .
+
+gsp:hasSpatialResolution prez:description "The spatial resolution of a Geometry."@en ;
+    prez:label "has spatial resolution"@en .
+
+gsp:hasVolume prez:description "The volume of a three-dimensional Spatial Object."@en ;
+    prez:label "has volume"@en .
+
+gsp:isEmpty prez:description "(true) if this geometric object is the empty Geometry. If true, then this geometric object represents the empty point set for the coordinate space."@en ;
+    prez:label "is empty"@en .
+
+gsp:isSimple prez:description "(true) if this geometric object has no anomalous geometric points, such as self intersection or self tangency."@en ;
+    prez:label "is simple"@en .
+
+gsp:kmlLiteral prez:description "A KML serialization of a Geometry object."@en ;
+    prez:label "KML Literal"@en .
+
+gsp:rcc8dc prez:description "States that the subject SpatialObject is spatially disjoint from the object SpatialObject. DE-9IM: FFTFFTTTT"@en ;
+    prez:label "disconnected"@en .
+
+gsp:rcc8ec prez:description "States that the subject SpatialObject spatially meets the object SpatialObject. DE-9IM: FFTFTTTTT"@en ;
+    prez:label "externally connected"@en .
+
+gsp:rcc8eq prez:description "States that the subject SpatialObject spatially equals the object SpatialObject. DE-9IM: TFFFTFFFT"@en ;
+    prez:label "equals"@en .
+
+gsp:rcc8ntpp prez:description "States that the subject SpatialObject is spatially inside the object SpatialObject. DE-9IM: TFFTFFTTT"@en ;
+    prez:label "non-tangential proper part"@en .
+
+gsp:rcc8ntppi prez:description "States that the subject SpatialObject spatially contains the object SpatialObject. DE-9IM: TTTFFTFFT"@en ;
+    prez:label "non-tangential proper part inverse"@en .
+
+gsp:rcc8po prez:description "States that the subject SpatialObject spatially overlaps the object SpatialObject. DE-9IM: TTTTTTTTT"@en ;
+    prez:label "partially overlapping"@en .
+
+gsp:rcc8tpp prez:description "States that the subject SpatialObject is spatially covered by the object SpatialObject. DE-9IM: TFFTTFTTT"@en ;
+    prez:label "tangential proper part"@en .
+
+gsp:rcc8tppi prez:description "States that the subject SpatialObject spatially covers the object SpatialObject. DE-9IM: TTTFTTFFT"@en ;
+    prez:label "tangential proper part inverse"@en .
+
+gsp:sfContains prez:description "States that the subject SpatialObject spatially contains the object SpatialObject. DE-9IM: T*****FF*"@en ;
+    prez:label "contains"@en .
+
+gsp:sfCrosses prez:description "States that the subject SpatialObject spatially crosses the object SpatialObject. DE-9IM: T*T******"@en ;
+    prez:label "crosses"@en .
+
+gsp:sfDisjoint prez:description "States that the subject SpatialObject is spatially disjoint from the object SpatialObject. DE-9IM: FF*FF****"@en ;
+    prez:label "disjoint"@en .
+
+gsp:sfEquals prez:description "States that the subject SpatialObject spatially equals the object SpatialObject. DE-9IM: TFFFTFFFT"@en ;
+    prez:label "equals"@en .
+
+gsp:sfIntersects prez:description "States that the subject SpatialObject is not spatially disjoint from the object SpatialObject. DE-9IM: T******** ^ *T******* ^ ***T***** ^ ****T****"@en ;
+    prez:label "intersects"@en .
+
+gsp:sfOverlaps prez:description "States that the subject SpatialObject spatially overlaps the object SpatialObject. DE-9IM: T*T***T**"@en ;
+    prez:label "overlaps"@en .
+
+gsp:sfTouches prez:description "States that the subject SpatialObject spatially touches the object SpatialObject. DE-9IM: FT******* ^ F**T***** ^ F***T****"@en ;
+    prez:label "touches"@en .
+
+gsp:sfWithin prez:description "States that the subject SpatialObject is spatially within the object SpatialObject. DE-9IM: T*F**F***"@en ;
+    prez:label "within"@en .
+
+gsp:spatialDimension prez:description "The number of measurements or axes needed to describe the spatial position of this Geometry in a coordinate system."@en ;
+    prez:label "spatial dimension"@en .
+
+gsp:wktLiteral prez:description "A Well-known Text serialization of a Geometry object."@en ;
+    prez:label "Well-known Text Literal"@en .
+
+owl:Ontology prez:description "The class of ontologies." ;
+    prez:label "Ontology" .
+
+ns1127:geosparql-swg prez:description "The Open Geospatial Consortium's GeoSPARQL Standards Working Group" ;
+    prez:label "GeoSPARQL DWG" .
+
+ns1127:ogc prez:label "Open Geospatial Consortium" .
+
+orc:0000-0002-3313-924X prez:label "Mathias Bonduel" .
+
+orc:0000-0002-8742-7730 prez:label "Nicholas J. Car" .
+
+orc:0000-0002-9499-5840 prez:label "Timo Homburg" .
+
+orc:0000-0003-1988-462X prez:label "Matthew Perry" .
+
+orc:0000-0003-3789-2260 prez:label "Frans Knibbe" .
+
+profile:open-object prez:description "An open profile for objects which will return all direct properties for a resource." ;
+    prez:label "Open profile" .
+
+ns1130:oracle.com prez:label "John Herring" .
+
+ns1131:geoscape.com.au prez:label "Joseph Abhayaratna" .
+
+orcidorg:0000-0002-3884-3420 prez:label "Simon J D Cox" .
+
+[] prez:currentProfile profile:open-object .
+

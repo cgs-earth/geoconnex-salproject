@@ -1,0 +1,13 @@
+# Builds and pushes the service and job images. `make images` submits this.
+steps:
+  - name: gcr.io/cloud-builders/docker
+    id: serve
+    args: [build, --target, serve, -t, "${_REPO}/serve:latest", .]
+  - name: gcr.io/cloud-builders/docker
+    id: job
+    args: [build, --target, job, -t, "${_REPO}/job:latest", .]
+images:
+  - "${_REPO}/serve:latest"
+  - "${_REPO}/job:latest"
+options:
+  logging: CLOUD_LOGGING_ONLY

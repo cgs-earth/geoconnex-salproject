@@ -1,0 +1,158 @@
+@prefix dct: <http://purl.org/dc/terms/> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix salmodule: <https://w3id.org/sal/salmodule#> .
+@prefix sh: <http://www.w3.org/ns/shacl#> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+salmodule: a owl:Ontology ;
+    rdfs:label "SAL Module"@en ;
+    dct:creator "Andrew Padilla" ;
+    dct:date "2024-06-01"^^xsd:date ;
+    dct:description "This is the SAL Module vocabulary for implementing the SAL Module specification in containerized application logic orchestrated within SAL projects"@en ;
+    dct:title "The Semantic Accessibility Layer (SAL) Module Ontology"@en ;
+    owl:versionInfo "0.0.2" ;
+    salmodule:protocolScheme "salmodule" .
+
+salmodule:NodeConsumer a owl:Class ;
+    rdfs:label "Node Consumer"@en ;
+    rdfs:comment "An inferred class representing an entity that consumes JSON(-LD) newline delimited JSON node stream from stdin within a SAL Module containerized application. Do NOT use this class directly to subclass your task. Used salmodule:Task instead. Intended for OWL Reasoner."@en ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( salmodule:Task [ a owl:Restriction ;
+                        owl:onProperty salmodule:stdinShape ;
+                        owl:someValuesFrom sh:NodeShape ] ) ] .
+
+salmodule:NodeProcessor a owl:Class ;
+    rdfs:label "Node Processor"@en ;
+    rdfs:comment "An inferred class representing an entity that processes newline delimited JSON node streams via stdin/stdout within a SAL Module containerized application. Do NOT use this class directly to subclass your task. Used salmodule:Task instead. Intended for OWL Reasoner."@en ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( salmodule:Task [ a owl:Restriction ;
+                        owl:onProperty salmodule:stdinShape ;
+                        owl:someValuesFrom sh:NodeShape ] [ a owl:Restriction ;
+                        owl:onProperty salmodule:stdoutShape ;
+                        owl:someValuesFrom sh:NodeShape ] ) ] .
+
+salmodule:NodeProducer a owl:Class ;
+    rdfs:label "Node Producer"@en ;
+    rdfs:comment "An inferred class representing an entity that produces a newline delimited JSON node stream to stdout within a SAL Module containerized application. Do NOT use this class directly to subclass your task. Used salmodule:Task instead. Intended for OWL Reasoner."@en ;
+    owl:equivalentClass [ a owl:Class ;
+            owl:intersectionOf ( salmodule:Task [ a owl:Restriction ;
+                        owl:onProperty salmodule:stdoutShape ;
+                        owl:someValuesFrom sh:NodeShape ] ) ] .
+
+salmodule:isSubCommandOf a owl:ObjectProperty ;
+    rdfs:label "is subcommand of"@en ;
+    rdfs:comment "Relates a salmodule:Command instance to its parent command instance that can be executed by a SAL Module containerized application."@en ;
+    rdfs:domain salmodule:Command ;
+    rdfs:range salmodule:Command ;
+    owl:inverseOf salmodule:hasSubCommand .
+
+salmodule:protocolScheme a owl:AnnotationProperty ;
+    rdfs:label "Protocol Scheme"@en ;
+    rdfs:comment "The protocol scheme used to identify SAL Module resources."@en ;
+    rdfs:seeAlso salmodule:OntologyCommand,
+        salmodule:RunCommand ;
+    skos:example "salmodule://github.com/owner/repository" ;
+    skos:note """Dereferencing an ontology with a SAL Module protocol scheme involves using 1) the github based protocol 
+    to clone the remote git repository 2) build the container image using the Dockerfile located in 
+    the base repository directory and 3) run the container using the salmodule:OntologyCommand."""@en .
+
+salmodule:taskShape a owl:AnnotationProperty ;
+    rdfs:label "JSON(-LD) Node Task SHACL Shape"@en ;
+    rdfs:comment "An annotation property representing the required shape of the salmodule:Task subclass instance itself."@en ;
+    rdfs:range sh:NodeShape .
+
+salmodule:EnvironmentVariable a owl:Class ;
+    rdfs:label "Environment Variable"@en ;
+    rdfs:comment "A class representing an environment variable that is part of the SAL Module specification."@en .
+
+salmodule:Error a owl:Class ;
+    rdfs:label "Error"@en ;
+    dct:conformsTo salmodule:Specification ;
+    rdfs:comment "A class representing an error condition within a salmodule:Task at runtime."@en ;
+    rdfs:seeAlso salmodule:RunCommand,
+        salmodule:Task,
+        salmodule:stderrShape ;
+    skos:note "A task reports an instance as one newline delimited JSON node on stderr, never on stdout, which carries only data; it carries both an rdfs:label naming the error and an rdfs:comment describing it, which together are the message the SAL Project reports the failure with."@en,
+        "Instances of salmodule:Error represent error conditions that occur during the execution of a salmodule:Task within a SAL Module containerized application."@en .
+
+salmodule:hasSubCommand a owl:ObjectProperty ;
+    rdfs:label "has subcommand"@en ;
+    rdfs:comment "Relates a salmodule:Command instance to its subcommand(s) that can be executed by a SAL Module containerized application."@en ;
+    rdfs:domain salmodule:Command ;
+    rdfs:range salmodule:Command .
+
+salmodule:stderrShape a owl:AnnotationProperty ;
+    rdfs:label "JSON(-LD) Node stderr SHACL Shape"@en ;
+    rdfs:comment "An annotation property representing the required SHACL sh:NodeShape(s) of the newline delimited JSON node error stream to stderr from a salmodule:Task subclass instance within a SAL Module containerized application."@en ;
+    rdfs:range sh:NodeShape ;
+    skos:note "The error stream must produce newline delimited JSON nodes that conform to the specified sh:NodeShape(s) when injected with the JSON-LD @context object defined within the salmodule's ontology."@en .
+
+salmodule:OntologyCommand a salmodule:Command ;
+    rdfs:label "ontology"@en,
+        "vocab"@en,
+        "vocabulary"@en ;
+    dct:conformsTo salmodule:Specification ;
+    rdfs:comment "The command that prints the SAL Module ontology to stdout in JSON-LD format."@en ;
+    salmodule:isSubCommandOf salmodule:SALModuleCommand .
+
+salmodule:SALModuleCommand a salmodule:Command ;
+    rdfs:label "salmodule"@en ;
+    dct:conformsTo salmodule:Specification ;
+    rdfs:comment "The base command for all containerized applications that adhere to the SAL Module specification."@en ;
+    salmodule:hasSubCommand salmodule:OntologyCommand,
+        salmodule:RunCommand .
+
+salmodule:TaskInstance a salmodule:EnvironmentVariable ;
+    rdfs:label "SALMODULE_TASK_INSTANCE"@en ;
+    dct:conformsTo salmodule:Specification ;
+    rdfs:comment "The environment variable that identifies the instance of a salmodule:Task subclass defined in a SAL Module ontology to be invoked by salmodule:RunCommand."@en ;
+    rdfs:seeAlso salmodule:RunCommand .
+
+salmodule:stdinShape a owl:AnnotationProperty ;
+    rdfs:label "JSON(-LD) Node stdin SHACL Shape"@en ;
+    rdfs:comment "An annotation property representing the required SHACL sh:NodeShape(s) of the newline delimited JSON node input stream from stdin to a salmodule:Task within a SAL Module containerized application."@en ;
+    rdfs:range sh:NodeShape ;
+    skos:note "It is the responsibility of the salmodule:Task subclass implementation to inject its ontology's JSON-LD @context into the JSON input node to resolve to its vocabulary."@en,
+        "The input stream accepts newline delimited JSON objects (not JSON-LD)."@en .
+
+salmodule:stdoutShape a owl:AnnotationProperty ;
+    rdfs:label "JSON(-LD) Node stdout SHACL Shape"@en ;
+    rdfs:comment "An annotation property representing the required SHACL sh:NodeShape(s) of the newline delimited JSON node output stream to stdout from a salmodule:Task subclass instance within a SAL Module containerized application."@en ;
+    rdfs:range sh:NodeShape ;
+    skos:note "The output stream must produce newline delimited JSON nodes that conform to the specified sh:NodeShape(s) when injected with the JSON-LD @context object defined within the salmodule's ontology."@en .
+
+salmodule:RunCommand a salmodule:Command ;
+    rdfs:label "run"@en ;
+    dct:conformsTo salmodule:Specification ;
+    rdfs:comment "The command that invokes a salmodule:Task subclass instance within a SAL Module containerized application."@en ;
+    rdfs:seeAlso salmodule:TaskInstance ;
+    salmodule:isSubCommandOf salmodule:SALModuleCommand .
+
+salmodule:Task a owl:Class ;
+    rdfs:label "Task"@en ;
+    dct:conformsTo salmodule:Specification ;
+    rdfs:comment "A class representing an operational task within a SAL Module containerized application."@en ;
+    rdfs:seeAlso salmodule:RunCommand,
+        salmodule:TaskInstance ;
+    skos:note "SAL Module implementers create subclasses of salmodule:Task to define specific operational tasks within the containerized application."@en ;
+    salmodule:stderrShape [ a sh:NodeShape ;
+            sh:property [ sh:message "An rdfs:comment (message) is required for salmodule:Error instances"@en ;
+                    sh:minCount 1 ;
+                    sh:path rdfs:comment ],
+                [ sh:message "An rdfs:label is required for salmodule:Error instances"@en ;
+                    sh:minCount 1 ;
+                    sh:path rdfs:label ] ;
+            sh:targetClass salmodule:Error ] .
+
+salmodule:Specification a dct:Standard ;
+    rdfs:label "SAL Module Specification"@en ;
+    rdfs:comment "A resource representing the SAL Module specification."@en .
+
+salmodule:Command a owl:Class ;
+    rdfs:label "Command"@en ;
+    rdfs:comment "A class representing a command that can be executed within a SAL Module containerized application as part of the SAL Module command line specification."@en ;
+    rdfs:seeAlso salmodule:Task .
+

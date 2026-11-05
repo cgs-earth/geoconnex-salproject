@@ -1,0 +1,87 @@
+{
+  "@context": {
+    "dcterms": "http://purl.org/dc/terms/",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "schema": "https://schema.org/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": ".",
+      "@type": "schema:Project",
+      "dcterms:description": "A representation of the Geoconnex graph as a SAL project",
+      "dcterms:title": "geoconnex-salproject"
+    },
+    {
+      "@id": "http://purl.org/dc/terms/",
+      "@type": "owl:Ontology",
+      "rdfs:label": "http://purl.org/dc/terms/",
+      "owl:versionIRI": {
+        "@id": "urn:sha256:13df401072dd7015bf9d75162f3e41c8138075304b7b9cc1aa1e9c16db976797"
+      },
+      "dcterms:format": "text/turtle; charset=utf-8",
+      "dcterms:modified": {
+        "@value": "2026-11-05T19:05:44Z",
+        "@type": "xsd:dateTime"
+      },
+      "rdfs:comment": "Represents the cached version of the http://purl.org/dc/terms/ vocabulary as of 2026-11-05T19:05:44Z used for validation in this project."
+    },
+    {
+      "@id": "http://www.opengis.net/ont/geosparql#",
+      "@type": "owl:Ontology",
+      "rdfs:label": "http://www.opengis.net/ont/geosparql#",
+      "owl:versionIRI": {
+        "@id": "urn:sha256:a7f082f0a23085b7b38af0156181f2ed0cb4932e5189f5aa8dd4b4a2bfda80b0"
+      },
+      "dcterms:format": "text/anot+turtle",
+      "dcterms:modified": {
+        "@value": "2026-11-05T19:06:03Z",
+        "@type": "xsd:dateTime"
+      },
+      "rdfs:comment": "Represents the cached version of the http://www.opengis.net/ont/geosparql# vocabulary as of 2026-11-05T19:06:03Z used for validation in this project."
+    },
+    {
+      "@id": "https://schema.org/",
+      "@type": "owl:Ontology",
+      "rdfs:label": "https://schema.org/",
+      "owl:versionIRI": {
+        "@id": "urn:sha256:0a4b8c4c910fc831ec8695196510973390906a5ee34dc6b862dfec4d21a12f74"
+      },
+      "dcterms:format": "application/ld+json",
+      "dcterms:modified": {
+        "@value": "2026-11-05T19:05:43Z",
+        "@type": "xsd:dateTime"
+      },
+      "rdfs:comment": "Represents the cached version of the https://schema.org/ vocabulary as of 2026-11-05T19:05:43Z used for validation in this project."
+    },
+    {
+      "@id": "https://w3id.org/sal/salmodule#",
+      "@type": "owl:Ontology",
+      "rdfs:label": "https://w3id.org/sal/salmodule#",
+      "owl:versionIRI": {
+        "@id": "urn:sha256:37a813a5812d3f43d1fc4b77d0ded6d4d213534e572dbeee48a31e5df69e1dec"
+      },
+      "dcterms:format": "text/turtle; charset=utf-8",
+      "dcterms:modified": {
+        "@value": "2026-11-05T19:05:43Z",
+        "@type": "xsd:dateTime"
+      },
+      "rdfs:comment": "Represents the cached version of the https://w3id.org/sal/salmodule# vocabulary as of 2026-11-05T19:05:43Z used for validation in this project."
+    },
+    {
+      "@id": "salmodule://github.com/cgs-earth/geoconnex-salmodule/",
+      "@type": "owl:Ontology",
+      "rdfs:label": "salmodule://github.com/cgs-earth/geoconnex-salmodule/",
+      "owl:versionIRI": {
+        "@id": "urn:git-commit-hash:a3f793ddbde13203cab081a0c70b56172081032b"
+      },
+      "dcterms:format": "application/ld+json",
+      "dcterms:modified": {
+        "@value": "2026-11-05T19:05:43Z",
+        "@type": "xsd:dateTime"
+      },
+      "rdfs:comment": "Represents the cached version of the salmodule://github.com/cgs-earth/geoconnex-salmodule/ vocabulary as of 2026-11-05T19:05:43Z used for validation in this project."
+    }
+  ]
+}

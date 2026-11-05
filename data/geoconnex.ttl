@@ -1,0 +1,7 @@
+@prefix salmodule: <https://w3id.org/sal/salmodule#> .
+@prefix geoconnex: <salmodule://github.com/cgs-earth/geoconnex-salmodule/> .
+
+# Harvests the JSON-LD of every feature in the Geoconnex STAC catalog
+# (https://storage.googleapis.com/harvest-geoconnex-us/stac/catalog.json).
+# With no includeSitemaps / excludeSitemaps, every sitemap is harvested.
+<HarvestGeoconnex> a geoconnex:JsonLdHarvester, salmodule:Task .
