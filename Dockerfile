@@ -12,6 +12,7 @@ FROM ${SAL_IMAGE} AS serve
 
 RUN apt-get update && apt-get install -y --no-install-recommends curl jq \
     && rm -rf /var/lib/apt/lists/*
+COPY job/pins/config.jsonld /app/pins/config.jsonld
 COPY job/serve-entrypoint.sh /app/serve-entrypoint.sh
 RUN chmod +x /app/serve-entrypoint.sh
 EXPOSE 8080

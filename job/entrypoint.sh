@@ -116,6 +116,10 @@ git commit -qm "Geoconnex SAL project"
 log "sal build"
 /app/sal build --message "$BUILD_MESSAGE" data/
 
+# sal upload sends only .sal/data. The service needs the project's pinned
+# vocabularies (.sal/config.jsonld) to list them, so send that along with it.
+cp .sal/config.jsonld .sal/data/config.jsonld
+
 log "sal upload to $BUCKET"
 /app/sal upload --bucket "$BUCKET"
 
