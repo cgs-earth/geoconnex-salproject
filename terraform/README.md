@@ -48,15 +48,16 @@ After that, every `make job-run` rebuilds, uploads, and rolls the service onto t
   public service. Remove it unless that is intended.
 - Terraform ignores the service's `data-version` label; the job sets it to force a new revision.
 
-## Vocabulary pins
+## Vocabularies
 
-`sal build` validates against each vocabulary the project uses, and fetches any it hasn't pinned from
-its publisher. `purl.org` (the `dcterms` vocabulary, hosted by the Internet Archive) timed out from
-Cloud Run, so `job/pins/` holds the pins and documents (`config.jsonld` and `blobs/`) from a local
-build, and the job copies them into place after `sal init`. This also fixes the vocabulary and
-harvester versions the build uses. A vocabulary the pins don't cover is still fetched at build time.
+`sal build` validates against each vocabulary the project uses. `purl.org` (the `dcterms` vocabulary,
+hosted by the Internet Archive) timed out from Cloud Run, so the job image is built with sal's seeded
+vocabularies: at image build time (Cloud Build's network), `sal init` stores 16 common vocabularies
+(schema.org, dcterms, geosparql, ...) in `/app/seed`, and the job copies them into `.sal/data/blobs`
+before building. They are stored, not pinned; the build pins the ones the data actually uses, without
+fetching them. A vocabulary outside that list is still fetched, with retries.
 
-To refresh them (new vocabularies, or a newer `geoconnex-salmodule`), build the job image, run it
-locally with `docker run --privileged` and `-e BUCKET=file:///out -e INCLUDE_SITEMAPS=ref:dams`
-(`mkdir /out` first; stop before `rm`), then copy `/work/.sal/config.jsonld` and
-`/work/.sal/data/blobs` out of the stopped container into `job/pins/`.
+The build's `.sal/config.jsonld` (the pins) is uploaded beside the data, and the service reads it from
+there to list the vocabularies in the UI. A bucket uploaded before that existed serves fine but lists
+only the built-in vocabularies, and the service logs a warning, until the next `make job-run`.
+Refreshing the vocabularies is just `make images`.

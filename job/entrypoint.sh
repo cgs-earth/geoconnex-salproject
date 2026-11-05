@@ -97,28 +97,16 @@ git init -q -b main
 git remote add origin "$REPO_URL"
 git config user.email "geoconnex-sal-job@cgs-earth.org"
 git config user.name "geoconnex sal job"
-/app/sal init --no-skills --description "A representation of the Geoconnex graph as a SAL project"
-# sal fetches each vocabulary the project uses from its publisher unless it has
-# a pinned copy, and some publishers (purl.org, hosted by the Internet Archive)
-# time out from Cloud Run. job/pins holds the pins and documents a local build
-# made, so the build validates against those and needs no vocabulary downloads.
-# See terraform/README.md to refresh them; vocabularies a pin does not cover are still
-# fetched.
-if [ -d /app/pins ]; then
-	log "using the vocabulary pins baked into the image"
-	cp /app/pins/config.jsonld .sal/config.jsonld
-	mkdir -p .sal/data/blobs
-	cp -R /app/pins/blobs/. .sal/data/blobs/
-fi
+/app/sal init --no-skills --no-vocabularies --description "A representation of the Geoconnex graph as a SAL project"
+# The common vocabularies, stored in the image (see the Dockerfile), so the
+# build pins what it uses without fetching it. Nothing is pinned yet.
+mkdir -p .sal/data/blobs
+cp -R /app/seed/. .sal/data/blobs/
 git add -A
 git commit -qm "Geoconnex SAL project"
 
 log "sal build"
 /app/sal build --message "$BUILD_MESSAGE" data/
-
-# sal upload sends only .sal/data. The service needs the project's pinned
-# vocabularies (.sal/config.jsonld) to list them, so send that along with it.
-cp .sal/config.jsonld .sal/data/config.jsonld
 
 log "sal upload to $BUCKET"
 /app/sal upload --bucket "$BUCKET"

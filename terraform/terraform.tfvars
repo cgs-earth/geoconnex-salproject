@@ -6,4 +6,8 @@ project = "knowledge-and-insights"
 public  = true
 with_ui = true
 # Small end-to-end test; remove this line for the full Geoconnex build.
-include_sitemaps = "ref:dams"
+include_sitemaps = "ref:dams,ref:mainstems,usgs:monitoring_locations"
+# The service holds its copy of the data product in memory (Cloud Run's
+# filesystem is in memory) on top of what DuckDB uses. 8Gi needs at least 2 CPUs.
+cpu    = "2"
+memory = "8Gi"
