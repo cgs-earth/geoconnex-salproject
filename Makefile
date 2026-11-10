@@ -21,7 +21,7 @@ IMAGE_REPO ?= $(REGION)-docker.pkg.dev/$(PROJECT)/$(NAME)
 $(TF_DIR)/.terraform:
 	terraform -chdir=$(TF_DIR) init
 
-.PHONY: registry infra images job-run help validate build run construct query sparql serve clean iac plan apply destroy upload
+.PHONY: registry infra images job-run job-run-wait help validate build run construct query sparql serve clean iac plan apply destroy upload
 
 validate: ## check every RDF source against its vocabularies; commits nothing
 	sal validate $(SOURCES)
@@ -57,5 +57,10 @@ registry: $(TF_DIR)/.terraform ## create the Artifact Registry repository the im
 images: ## build and push the service and job images with Cloud Build
 	gcloud builds submit --project $(PROJECT) --config cloudbuild.yaml --substitutions _REPO=$(IMAGE_REPO) .
 
-job-run: ## run the build job: sal build the Geoconnex graph, upload it, roll the service
+job-run: ## start the build job without waiting and print its Cloud Console URL (logs and status)
+	@exec=$$(gcloud run jobs execute $(NAME)-sal-build --project $(PROJECT) --region $(REGION) --async --format='value(metadata.name)') && \
+	echo "Started $$exec" && \
+	echo "https://console.cloud.google.com/run/jobs/executions/details/$(REGION)/$$exec/logs?project=$(PROJECT)"
+
+job-run-wait: ## same as job-run, but block until the job finishes
 	gcloud run jobs execute $(NAME)-sal-build --project $(PROJECT) --region $(REGION) --wait
