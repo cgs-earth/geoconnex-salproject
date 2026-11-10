@@ -8,6 +8,6 @@ with_ui = true
 # Small end-to-end test; remove this line for the full Geoconnex build.
 include_sitemaps = "ref:dams,ref:mainstems,wwdh:noaa_rfc"
 # The service holds its copy of the data product in memory (Cloud Run's
-# filesystem is in memory) on top of what DuckDB uses. 8Gi needs at least 2 CPUs.
-cpu    = "4"
-memory = "16Gi"
+# filesystem is in memory) on top of what DuckDB uses. 24Gi needs at least 6 CPUs.
+cpu    = "6"
+memory = "24Gi"
