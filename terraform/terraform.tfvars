@@ -10,4 +10,4 @@ include_sitemaps = "ref:dams,ref:mainstems,wwdh:noaa_rfc"
 # The service holds its copy of the data product in memory (Cloud Run's
 # filesystem is in memory) on top of what DuckDB uses. 8Gi needs at least 2 CPUs.
 cpu    = "2"
-memory = "8Gi"
+memory = "16Gi"
