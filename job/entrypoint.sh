@@ -108,6 +108,37 @@ git commit -qm "Geoconnex SAL project"
 log "sal build"
 /app/sal build --message "$BUILD_MESSAGE" data/
 
+# sal upload only adds and overwrites objects; it never removes any. Without
+# this, files from earlier builds (old snapshots, data files of sitemaps that
+# are no longer harvested) stay in the bucket and the service serves them. This
+# runs after the build succeeds, so a failed harvest leaves the old data intact.
+# The window where the bucket is empty is only the upload; running service
+# instances keep the copy they made at start.
+clear_bucket() {
+	local path="${BUCKET#gs://}" bucket prefix token page url resp
+	bucket="${path%%/*}"
+	prefix=""
+	[ "$path" = "$bucket" ] || prefix="${path#*/}"
+	token="$(curl -fsS -H 'Metadata-Flavor: Google' \
+		http://metadata.google.internal/computeMetadata/v1/instance/service-accounts/default/token | jq -r .access_token)"
+	export TOKEN="$token" STORAGE_BUCKET="$bucket"
+	page=""
+	while :; do
+		url="https://storage.googleapis.com/storage/v1/b/$bucket/o?maxResults=1000&fields=items(name),nextPageToken"
+		[ -z "$prefix" ] || url+="&prefix=$(jq -rn --arg n "$prefix" '$n|@uri')"
+		[ -z "$page" ] || url+="&pageToken=$page"
+		resp="$(curl -fsS -H "Authorization: Bearer $TOKEN" "$url")"
+		jq -r '.items[]?.name' <<<"$resp" | tr '\n' '\0' | xargs -0 -r -n1 -P 16 bash -c '
+			curl -fsS --retry 5 -X DELETE -H "Authorization: Bearer $TOKEN" \
+				"https://storage.googleapis.com/storage/v1/b/$STORAGE_BUCKET/o/$(jq -rn --arg n "$1" "\$n|@uri")"' _
+		page="$(jq -r '.nextPageToken // empty' <<<"$resp")"
+		[ -n "$page" ] || break
+	done
+}
+
+log "clearing the previous data product from $BUCKET"
+clear_bucket
+
 log "sal upload to $BUCKET"
 /app/sal upload --bucket "$BUCKET"
 
