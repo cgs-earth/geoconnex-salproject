@@ -8,7 +8,7 @@ with_ui = true
 # Commented out to include all sitemaps
 # include_sitemaps = "ref:dams,ref:mainstems,wwdh:noaa_rfc"
 # Over half of the harvest; skipped so the table fits in the service's memory.
-exclude_sitemaps = "usgs:national_geologic_map"
+exclude_sitemaps = "usgs:national_geologic_map,usgs:sciencebase"
 # The service holds its copy of the data product in memory (Cloud Run's
 # filesystem is in memory) on top of what DuckDB uses. 24Gi needs at least 6 CPUs.
 cpu    = "6"

@@ -12,7 +12,7 @@ MESSAGE ?=
 TF_DIR ?= terraform
 BUCKET ?= $(shell terraform -chdir=$(TF_DIR) output -raw bucket_url 2>/dev/null)
 
-# The build runs in a Cloud Run job, not locally; see terraform/README.md.
+# The build runs on an ephemeral Compute Engine VM, not locally; see terraform/README.md.
 PROJECT ?= $(shell awk -F'"' '/^project[ ]*=/{print $$2}' $(TF_DIR)/terraform.tfvars)
 REGION ?= us-central1
 NAME ?= geoconnex-salproject
@@ -48,7 +48,7 @@ upload: ## copy .sal/data to the bucket, after a build
 	@test -n "$(BUCKET)" || { echo "no bucket: run make apply first, or BUCKET=gs://my-bucket/ make upload"; exit 1; }
 	sal upload --bucket $(BUCKET)
 
-infra: $(TF_DIR)/.terraform ## create the bucket, the build job, and the service accounts, but not the service (it cannot start until the job has filled the bucket)
+infra: $(TF_DIR)/.terraform ## create the bucket, the build VM template, and the service accounts, but not the service (it cannot start until the job has filled the bucket)
 	terraform -chdir=$(TF_DIR) apply -var deploy_service=false
 
 registry: $(TF_DIR)/.terraform ## create the Artifact Registry repository the images are pushed to
@@ -57,10 +57,23 @@ registry: $(TF_DIR)/.terraform ## create the Artifact Registry repository the im
 images: ## build and push the service and job images with Cloud Build
 	gcloud builds submit --project $(PROJECT) --config cloudbuild.yaml --substitutions _REPO=$(IMAGE_REPO) .
 
-job-run: ## start the build job without waiting and print its Cloud Console URL (logs and status)
-	@exec=$$(gcloud run jobs execute $(NAME)-sal-build --project $(PROJECT) --region $(REGION) --async --format='value(metadata.name)') && \
-	echo "Started $$exec" && \
-	echo "https://console.cloud.google.com/run/jobs/executions/details/$(REGION)/$$exec/logs?project=$(PROJECT)"
+BUILD_TEMPLATE ?= $(shell terraform -chdir=$(TF_DIR) output -raw build_template 2>/dev/null)
+BUILD_ZONE ?= $(shell terraform -chdir=$(TF_DIR) output -raw build_zone 2>/dev/null)
 
-job-run-wait: ## same as job-run, but block until the job finishes
-	gcloud run jobs execute $(NAME)-sal-build --project $(PROJECT) --region $(REGION) --wait
+job-run: ## create the ephemeral build VM without waiting; it builds, uploads, rolls the service and deletes itself
+	@test -n "$(BUILD_TEMPLATE)" || { echo "no build template: run make infra first"; exit 1; }
+	@vm=$(NAME)-sal-build-$$(date -u +%Y%m%d-%H%M%S) && \
+	gcloud compute instances create $$vm --project $(PROJECT) --zone $(BUILD_ZONE) \
+		--source-instance-template $(BUILD_TEMPLATE) --quiet >/dev/null && \
+	echo "Started $$vm; it deletes itself when the build ends" && \
+	echo "Logs: https://console.cloud.google.com/logs/query;query=resource.type%3D%22gce_instance%22%20labels.instance_name%3D%22$$vm%22?project=$(PROJECT)" && \
+	echo "Serial console: gcloud compute instances get-serial-port-output $$vm --project $(PROJECT) --zone $(BUILD_ZONE)"
+
+job-run-wait: ## same as job-run, but block until the VM has deleted itself; check the logs for whether the build succeeded
+	@test -n "$(BUILD_TEMPLATE)" || { echo "no build template: run make infra first"; exit 1; }
+	@vm=$(NAME)-sal-build-$$(date -u +%Y%m%d-%H%M%S) && \
+	gcloud compute instances create $$vm --project $(PROJECT) --zone $(BUILD_ZONE) \
+		--source-instance-template $(BUILD_TEMPLATE) --quiet >/dev/null && \
+	echo "Started $$vm; waiting for it to delete itself" && \
+	while gcloud compute instances describe $$vm --project $(PROJECT) --zone $(BUILD_ZONE) >/dev/null 2>&1; do sleep 30; done && \
+	echo "$$vm is gone: the build ended. Check the Cloud Logging entries for instance_name=$$vm to see whether it succeeded."

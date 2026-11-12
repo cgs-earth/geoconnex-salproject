@@ -7,7 +7,7 @@ Cloud Run service serves it as a SPARQL endpoint.
 
 - **Project:** [`data/geoconnex.ttl`](data/geoconnex.ttl) declares the harvester task. With no filters it
   harvests every sitemap.
-- **Build:** a Cloud Run job runs `sal build` and `sal upload`, then rolls the service onto the new data.
+- **Build:** an ephemeral Compute Engine VM runs `sal build` and `sal upload`, then rolls the service onto the new data and deletes itself.
   `sal build` runs the module in a container, so the job image starts its own Docker daemon.
 - **Serve:** the service copies the bucket onto local disk when an instance starts, then runs `sal serve`.
   Cloud Run's filesystem is in memory, so the table counts against the service's memory.
@@ -19,7 +19,7 @@ Needs `gcloud` (logged in) and `terraform`. Set `project` in `terraform/terrafor
 ```sh
 make registry    # Artifact Registry repository
 make images      # build and push the job and service images
-make infra       # bucket, build job, service accounts
+make infra       # bucket, build VM template, service accounts
 make job-run     # build the graph and upload it
 make apply       # create the service (it can't start until the bucket has data)
 ```
@@ -38,7 +38,7 @@ In `terraform/terraform.tfvars`; every variable is in `terraform/variables.tf`.
 
 - `include_sitemaps` / `exclude_sitemaps`: comma separated sitemap IDs, such as `ref:dams,ref:mainstems`.
   `terraform.tfvars` currently sets a small test subset; delete the line for the full build.
-- `job_cpu` / `job_memory` and `cpu` / `memory`: sizes for the job and the service. Both hold the table in memory.
+- `build_machine_type` / `build_disk_size_gb`: the build VM, which works on its disk. `cpu` / `memory`: the service, which holds the table in memory.
 - `min_instances`: `0` by default, so the service scales to zero and a cold start re-copies the bucket.
 - `with_ui`: the UI's SQL endpoint runs arbitrary DuckDB statements, so turn it off on a public service if
   that matters.

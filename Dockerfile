@@ -2,7 +2,7 @@
 #
 #   serve  the Cloud Run service. job/serve-entrypoint.sh copies the built data
 #          product out of the bucket onto local disk, then runs sal serve.
-#   job    the Cloud Run job (the default). sal, a Docker daemon for sal to run
+#   job    the build, run on the ephemeral build VM (the default). sal, a Docker daemon for sal to run
 #          the geoconnex salmodule on, and this project's RDF. `sal build` runs
 #          a SAL module by building and running its container, so the daemon
 #          lives in this image and job/entrypoint.sh starts it before building.
@@ -44,8 +44,7 @@ RUN set -e; d="$(mktemp -d)"; cd "$d"; \
     /app/sal init --no-skills --description seed; \
     mkdir -p /app/seed && cp -R .sal/data/blobs/. /app/seed/; \
     ls /app/seed | wc -l
-COPY job/runc-capfix /usr/local/bin/runc-capfix
 COPY job/entrypoint.sh /app/entrypoint.sh
-RUN chmod +x /app/entrypoint.sh /usr/local/bin/runc-capfix
+RUN chmod +x /app/entrypoint.sh
 
 ENTRYPOINT ["/app/entrypoint.sh"]

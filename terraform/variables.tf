@@ -115,20 +115,38 @@ variable "job_image" {
   default     = null
 }
 
-variable "job_cpu" {
-  description = "CPU limit of the build job."
+variable "build_machine_type" {
+  description = "Machine type of the build VM. The working copy of the table is on the VM's disk, so this only has to hold DuckDB and the harvest in memory."
   type        = string
-  default     = "8"
+  default     = "n2-highmem-8"
 }
 
-variable "job_memory" {
-  description = "Memory limit of the build job. Cloud Run's filesystem is in memory, so the job's working copy of the table, the Docker daemon's images, and DuckDB all share this. The full Geoconnex harvest is about 9 GB of compressed JSON-LD; 32Gi is the most a job gets with 8 CPUs."
-  type        = string
-  default     = "32Gi"
+variable "build_disk_size_gb" {
+  description = "Boot disk of the build VM, which holds the working copy of the table and Docker's storage. Deleted with the VM."
+  type        = number
+  default     = 500
 }
 
-variable "job_timeout_seconds" {
-  description = "How long the build job may run."
+variable "build_zone" {
+  description = "Zone the build VM is created in. Defaults to the -a zone of the region."
+  type        = string
+  default     = null
+}
+
+variable "build_network" {
+  description = "VPC network of the build VM."
+  type        = string
+  default     = "default"
+}
+
+variable "build_subnetwork" {
+  description = "Subnetwork of the build VM. Empty uses the network's subnet in the region (an auto mode network)."
+  type        = string
+  default     = null
+}
+
+variable "build_timeout_seconds" {
+  description = "How long the build VM may live before Compute Engine deletes it."
   type        = number
   default     = 43200
 }
@@ -141,12 +159,6 @@ variable "include_sitemaps" {
 
 variable "exclude_sitemaps" {
   description = "Comma separated Geoconnex sitemap_ids to skip, such as usgs:national_geologic_map. Ignored when include_sitemaps is set."
-  type        = string
-  default     = ""
-}
-
-variable "docker_host" {
-  description = "A Docker daemon for the build job to use instead of starting one in the job, such as tcp://10.0.0.5:2375. Empty starts dockerd inside the job."
   type        = string
   default     = ""
 }

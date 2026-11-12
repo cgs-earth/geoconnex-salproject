@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 #
-# Cloud Run job entrypoint: build the Geoconnex graph with sal and upload it.
+# Build entrypoint, run in a privileged container on the ephemeral build VM
+# (job/build-vm-startup.sh): build the Geoconnex graph with sal and upload it.
 #
 #   1. start a Docker daemon (sal runs the geoconnex salmodule in a container)
 #   2. create the sal project from the RDF baked into the image
@@ -34,8 +35,7 @@ log "capabilities this job holds: $(awk '/^CapBnd:/{print $2}' /proc/self/status
 start_dockerd() {
 	local args=("$@")
 	log "starting dockerd ${args[*]}"
-	dockerd --add-runtime capfix=/usr/local/bin/runc-capfix --default-runtime=capfix \
-		"${args[@]}" ${DOCKERD_ARGS:-} >/var/log/dockerd.log 2>&1 &
+	dockerd "${args[@]}" ${DOCKERD_ARGS:-} >/var/log/dockerd.log 2>&1 &
 	DOCKERD_PID=$!
 	for _ in $(seq 1 60); do
 		if docker info >/dev/null 2>&1; then

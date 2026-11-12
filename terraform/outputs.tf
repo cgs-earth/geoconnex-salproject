@@ -28,7 +28,12 @@ output "image_repository" {
   value       = local.repo_url
 }
 
-output "build_job" {
-  description = "The Cloud Run job that builds the graph; make job-run executes it."
-  value       = google_cloud_run_v2_job.build.name
+output "build_template" {
+  description = "The instance template make job-run creates the ephemeral build VM from."
+  value       = google_compute_instance_template.build.name
+}
+
+output "build_zone" {
+  description = "The zone make job-run creates the build VM in."
+  value       = coalesce(var.build_zone, "${var.region}-a")
 }

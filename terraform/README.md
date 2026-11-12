@@ -4,9 +4,10 @@ Started from `sal terraform`, then changed so the graph is built on Google Cloud
 
 - a Cloud Storage bucket holding the built data product (`sal upload` writes it);
 - an Artifact Registry repository with two images, built from the `Dockerfile` in the project root;
-- a **Cloud Run job** (`geoconnex-salproject-sal-build`) that runs `sal build` on `data/geoconnex.ttl`,
-  which declares the `geoconnex-salmodule` harvester task, then `sal upload`s the result to the bucket
-  and asks the service for a new revision;
+- an **instance template** for an **ephemeral Compute Engine VM**. `make job-run` creates a VM from it;
+  the VM runs `sal build` on `data/geoconnex.ttl`, which declares the `geoconnex-salmodule` harvester
+  task, then `sal upload`s the result to the bucket, asks the service for a new revision, and deletes
+  itself. Compute Engine also deletes it after `build_timeout_seconds` whatever it is doing;
 - a **Cloud Run service** that copies the bucket onto local disk when an instance starts and runs
   `sal serve` over the copy: `/sparql`, `/stac/catalog.json`, `/blobs`;
 - a service account for each, with only the bucket access it needs.
@@ -31,15 +32,23 @@ After that, every `make job-run` rebuilds, uploads, and rolls the service onto t
 
 ## Things to know
 
-- **The job runs its own Docker daemon.** `sal build` runs a SAL module by building and running its
-  container. Cloud Run jobs have no daemon, so `job/entrypoint.sh` starts `dockerd` in the job. This
-  has only been tested with `docker run --privileged`, not on Cloud Run, whose containers are not
-  privileged. If the job logs that no daemon could be started, point it at one with the `docker_host`
-  variable, or run the same steps in Cloud Build.
-- **Memory.** Cloud Run's filesystem is in memory. The job's working copy of the table, Docker's
-  images, and DuckDB share `job_memory` (32Gi is the most a job gets), and each service instance
-  holds a full copy of the table in `memory`. About 9 GB of compressed JSON-LD is harvested, so
-  size both from a real run, and drop big sitemaps with `exclude_sitemaps` if needed
+- **The build runs on a VM, not in Cloud Run.** Cloud Run's filesystem is in memory, so a build there
+  needs the whole working copy of the table, Docker's images and DuckDB to fit in one memory limit
+  (32Gi at most). The VM works on its boot disk (`build_disk_size_gb`, 500 by default, deleted with the
+  VM), so only DuckDB needs memory (`build_machine_type`).
+- **The VM runs the job image in a privileged container** with its own Docker daemon, because `sal build`
+  runs a SAL module by building and running its container. The work directory and Docker's storage are
+  on the VM's disk. The VM gets an ephemeral external IP so it can reach the Geoconnex catalog and the
+  vocabulary publishers; `build_network` / `build_subnetwork` choose the network (the `default` network
+  must exist, or name another).
+- **Logs.** The container logs to Cloud Logging (`resource.type="gce_instance"`, label `instance_name`);
+  `make job-run` prints a link. The VM is gone afterwards, so that is where to see whether a build
+  succeeded.
+- **Stale data.** `sal upload` never deletes objects, so the job empties the bucket after a successful
+  build and before uploading, so that nothing from an earlier build is served.
+- **Service memory.** Each service instance still holds a full copy of the table in `memory`, because
+  Cloud Run's filesystem is in memory. About 9 GB of compressed JSON-LD is harvested, so size it from a
+  real run, and drop big sitemaps with `exclude_sitemaps` if needed
   (`usgs:national_geologic_map` is over half of it).
 - **Cold start.** A service instance copies the whole data product before it listens;
   `startup_failure_threshold` (10 seconds each) bounds how long that may take. Keep `min_instances = 1`
